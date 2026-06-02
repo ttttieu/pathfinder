@@ -5,12 +5,12 @@ import { ELECTIVE_SUBJECTS } from '@/lib/knowledge-graph'
 import ResultCRMCard from '@/components/ResultCRMCard'
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function ResultPage({ params }: Props) {
   const supabase = createAdminClient()
-
+  const { id } = await params
   const { data, error } = await supabase
     .from('assessments')
     .select(`
@@ -18,7 +18,7 @@ export default async function ResultPage({ params }: Props) {
       open_paths, restricted_paths, strengths, insights,
       students ( email, name, grade, school, province )
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !data) notFound()
