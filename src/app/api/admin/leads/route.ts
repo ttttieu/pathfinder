@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase'
-
+interface LeadRow {
+  id: string | number;
+  students: Record<string, string> | null;
+  [key: string]: any; // Cho phép các trường khác đi kèm từ Supabase select
+}
 function requireAdmin(req: NextRequest): boolean {
   const auth = req.headers.get('x-admin-secret')
   return auth === process.env.ADMIN_SECRET
@@ -38,7 +42,7 @@ export async function GET(req: NextRequest) {
     'selected_electives', 'open_paths', 'restricted_paths', 'strengths',
   ]
 
-  const rows = (data ?? []).map(row => {
+  const rows = (data ?? []).map((row: LeadRow) => {
     const s = row.students as Record<string, string> | null
     return [
       row.id,
@@ -56,7 +60,7 @@ export async function GET(req: NextRequest) {
     ].map(v => `"${String(v).replace(/"/g, '""')}"`)
   })
 
-  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
+  const csv = [headers.join(','), ...rows.map((r: string[]) => r.join(','))].join('\n')
 
   return new NextResponse(csv, {
     headers: {

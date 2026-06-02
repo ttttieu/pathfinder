@@ -3,8 +3,9 @@ import { createAdminClient } from '@/lib/supabase'
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise <{ id: string }> },
 ) {
+  const { id } = await params
   const supabase = createAdminClient()
 
   const { data, error } = await supabase
@@ -22,7 +23,7 @@ export async function GET(
         id, email, name, grade, school, province
       )
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !data) {

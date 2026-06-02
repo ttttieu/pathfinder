@@ -12,12 +12,33 @@ export function createClient() {
 
 /** Use in Server Components / Route Handlers */
 export function createServerSupabaseClient() {
-  const cookieStore = cookies()
+  const cookieStore = cookies() // Đối tượng này là một Promise trong Next.js 15/16
+
   return createServerClient(url, anon, {
     cookies: {
-      get:    (name) => cookieStore.get(name)?.value,
-      set:    () => {},   // read-only in server components
-      remove: () => {},
+      // 1. Biến hàm get thành async và await cookieStore
+      async get(name) {
+        const store = await cookieStore
+        return store.get(name)?.value
+      },
+      // 2. Cập nhật async/await cho set để đồng bộ cấu hình mới
+      async set(name, value, options) {
+        try {
+          const store = await cookieStore
+          store.set(name, value, options)
+        } catch {
+          // Hạn chế crash khi gọi ở môi trường Server Component chỉ đọc
+        }
+      },
+      // 3. Cập nhật async/await cho remove
+      async remove(name, options) {
+        try {
+          const store = await cookieStore
+          store.set(name, '', { ...options, maxAge: 0 })
+        } catch {
+          // Hạn chế crash khi gọi ở môi trường Server Component chỉ đọc
+        }
+      },
     },
   })
 }
