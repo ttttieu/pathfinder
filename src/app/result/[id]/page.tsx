@@ -2,7 +2,9 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase'
 import { ELECTIVE_SUBJECTS } from '@/lib/knowledge-graph'
-import ResultCRMCard from '@/components/ResultCRMCard'
+import ResultShareCard from '@/components/ResultShareCard'
+import BestieUnlockTeaser from '@/components/bestie/BestieUnlockTeaser'
+import type { SubjectCode } from '@/types'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -24,7 +26,8 @@ export default async function ResultPage({ params }: Props) {
   if (error || !data) notFound()
 
   const student = data.students as Record<string, string> | null
-  const electives = (data.selected_electives as string[])
+  const selectedElectives = data.selected_electives as SubjectCode[]
+  const electives = selectedElectives
     .map(c => ELECTIVE_SUBJECTS.find(s => s.code === c)?.name ?? c)
 
   const coreNames = ['Toán', 'Ngữ văn', 'Ngoại ngữ', 'Lịch sử']
@@ -123,19 +126,17 @@ export default async function ResultPage({ params }: Props) {
           </ul>
         </div>
 
-        {/* CRM export card (client component) */}
-        <ResultCRMCard
-          email={student?.email ?? ''}
-          name={student?.name ?? ''}
-          grade={student?.grade ?? ''}
-          school={student?.school ?? ''}
-          province={student?.province ?? ''}
-          subjects={allSubjects.join(', ')}
-          strengths={(data.strengths as string[]).join(', ')}
-          openPaths={(data.open_paths as string[])}
-          restrictedPaths={(data.restricted_paths as string[])}
-          assessmentId={data.id}
-        />
+        {/* Share card */}
+        <div className="card">
+          <ResultShareCard
+            selectedElectives={selectedElectives}
+            openPaths={data.open_paths as string[]}
+            grade={student?.grade ?? ''}
+          />
+        </div>
+
+        {/* Bestie Finder CTA */}
+        <BestieUnlockTeaser />
 
         {/* Restart */}
         <div className="text-center pt-2">
