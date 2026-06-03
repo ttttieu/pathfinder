@@ -16,55 +16,60 @@ export default function BestiePage() {
 
   if (view === 'quiz') {
     return (
-      <main className="min-h-screen py-8 px-4">
-        <div className="max-w-lg mx-auto mb-6">
-          <div className="flex items-center gap-2">
+      <main className="min-h-screen flex flex-col items-center px-4 py-10">
+        <div className="max-w-lg w-full mb-6">
+          <div className="flex items-center justify-between mb-4">
             <button
               onClick={() => setView('home')}
-              className="text-sm text-stone-400 hover:text-stone-600 transition"
+              className="btn-secondary text-xs px-3 py-1.5"
             >
-              ←
+              ← Quay lại
             </button>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-brand-400 inline-block" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-stone-400">
+              <span className="w-2.5 h-2.5 rounded-full bg-brand-400 inline-block" />
+              <span className="text-xs font-bold tracking-widest uppercase text-stone-400">
                 Bestie Finder
               </span>
             </div>
           </div>
+          <p className="text-sm text-stone-500 text-center">
+            Trả lời nhanh để mở khóa chân dung bạn thân hợp vibe nhất.
+          </p>
         </div>
-        <BestieQuiz />
+        <div className="max-w-lg w-full">
+          <BestieQuiz />
+        </div>
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen py-8 px-4">
-      <div className="max-w-lg mx-auto space-y-6">
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-16">
+      <div className="max-w-lg w-full text-center">
 
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-brand-400 inline-block" />
-          <span className="text-xs font-semibold tracking-widest uppercase text-stone-400">
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <span className="w-2.5 h-2.5 rounded-full bg-brand-400 inline-block" />
+          <span className="text-xs font-bold tracking-widest uppercase text-stone-400">
             Bestie Finder
           </span>
         </div>
 
         {/* Headline */}
-        <div>
-          <h1 className="text-3xl font-medium leading-tight mb-3">
+        <div className="mb-8">
+          <h1 className="text-3xl font-semibold leading-tight mb-4 text-stone-900">
             Tôi biết mày<br />
             như nào —<br />
             <span className="text-brand-600">kể cả chưa gặp.</span>
           </h1>
-          <p className="text-stone-500 leading-relaxed">
+          <p className="text-stone-500 text-base leading-relaxed">
             8 câu hỏi nhỏ. Không có đáp án sai.<br />
             Kết quả thì... tuỳ mày tin không thôi.
           </p>
         </div>
 
         {/* Unlock card */}
-        <div className="card p-0 overflow-hidden">
+        <div className="card p-0 overflow-hidden text-left">
           <div className="px-4 py-3 bg-stone-50 dark:bg-stone-900 border-b border-stone-100 dark:border-stone-800">
             <p className="text-xs font-semibold tracking-widest uppercase text-stone-400 mb-0.5">
               Mở khoá chân dung bạn thân
@@ -85,31 +90,23 @@ export default function BestiePage() {
                 onKeyDown={e => e.key === 'Enter' && ttLink.trim().length >= 3 && unlock()}
               />
               <button
-                className="btn-primary text-sm px-4"
+                className="btn-primary text-sm px-4 py-2.5"
                 onClick={unlock}
                 disabled={ttLink.trim().length < 3}
               >
                 Mở khoá
               </button>
-            </div>
-
-            <p className="text-xs text-stone-400">
-              Chưa đăng TikTok?{' '}
-              <button
-                onClick={unlock}
-                className="underline underline-offset-2 hover:text-stone-600 transition"
-              >
-                Bỏ qua, vào thẳng quiz
-              </button>
-            </p>
+            </div>            
           </div>
         </div>
 
         {/* Galaxy Brain meme */}
-        <GalaxyBrain />
+        <div className="mt-8">
+          <GalaxyBrain />
+        </div>
 
         {/* Footer link back */}
-        <p className="text-center text-xs text-stone-400">
+        <p className="text-xs text-stone-400 mt-8">
           Từ team{' '}
           <a
             href="/"
